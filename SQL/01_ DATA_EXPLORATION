@@ -1,0 +1,127 @@
+--Project: Customer Insurance Value Analysis
+--first im gonna create table for my dataset
+
+CREATE TABLE customer_insurance (
+
+    customer VARCHAR(50),
+    state VARCHAR(50),
+    customer_lifetime_value DECIMAL(12,2),
+    response VARCHAR(10),
+    coverage VARCHAR(20),
+    education VARCHAR(50),
+    effective_to_date DATE,
+    employment_status VARCHAR(50),
+    gender VARCHAR(10),
+    income INT,
+    location_code VARCHAR(20),
+    marital_status VARCHAR(20),
+    monthly_premium_auto INT,
+    months_since_last_claim INT,
+    months_since_policy_inception INT,
+    number_of_open_complaints INT,
+    number_of_policies INT,
+    policy_type VARCHAR(50),
+    policy VARCHAR(50),
+    renew_offer_type VARCHAR(20),
+    sales_channel VARCHAR(50),
+    total_claim_amount DECIMAL(12,2),
+    vehicle_class VARCHAR(50),
+    vehicle_size VARCHAR(20)
+
+);  
+
+select * from customer_insurance; 
+
+
+--01_Data_Exploration.sql
+
+--Display all records from the dataset.
+select * from customer_insurance;
+
+--Count the total number of customers.
+select count(*) as total_customers
+from customer_insurance;
+
+
+--Find the total number of columns in the dataset.
+SELECT COUNT(*)
+FROM information_schema.columns
+WHERE table_name = 'customer_insurance';
+
+--List all unique states.
+select distinct state
+as unique_states
+from customer_insurance
+order by state;
+
+--List all unique policy types.
+select distinct policy_type
+as unique_policy_type
+from customer_insurance
+order by policy_type;
+
+--List all unique policy categories.
+select distinct policy
+as unique_policy
+from customer_insurance
+order by policy;
+
+--List all unique sales channels.
+select distinct sales_channel
+as unique_sales_channel
+from customer_insurance
+order by sales_channel;
+
+--List all unique employment statuses.
+select distinct employment_status
+as unique_employment_status
+from customer_insurance
+order by employment_status;
+
+
+--Count customers by gender.
+select gender, count(*) 
+as total_employees
+from customer_insurance
+group by gender
+order by total_employees desc;
+
+--Count customers by marital status.
+select marital_status, count(*) 
+as total_employees
+from customer_insurance
+group by marital_status
+order by total_employees desc;
+
+
+--Find customers living in a arizona
+select customer, state
+from customer_insurance
+where state='Arizona';
+
+--Find customers whose income is above the overall average.
+SELECT customer,income
+FROM customer_insurance
+WHERE income > (
+    SELECT AVG(income)
+    FROM customer_insurance
+);
+
+
+--Display customers with Premium coverage
+select customer,coverage
+from customer_insurance
+where coverage ='Premium';
+
+--Find customers who responded positively to the marketing campaign.
+select customer,response
+from customer_insurance
+where response='Yes';
+
+
+--Display the top 20 customers with the highest Customer Lifetime Value.
+select customer,customer_lifetime_value
+from customer_insurance
+group by customer,customer_lifetime_value
+order by customer_lifetime_value desc
+limit 20;
