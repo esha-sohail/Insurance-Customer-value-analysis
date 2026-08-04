@@ -1,0 +1,54 @@
+
+--03_ BUSINESS ANALYSIS
+--Customer Analysis
+
+--Total customers by state.
+SELECT state,
+count(*) as total_customers
+from customer_insurance
+group by state
+order by total_customers desc;
+
+--Total customers by policy type.
+SELECT policy_type,
+count(*) as total_customers
+from customer_insurance
+group by policy_type
+order by total_customers desc;
+
+--Total customers by policy category
+SELECT policy,
+count(*) as total_customers
+from customer_insurance
+group by policy
+order by total_customers desc;
+
+
+--Total customers by education.
+SELECT education,
+count(*) as total_customers
+from customer_insurance
+group by education
+order by total_customers desc;
+
+
+--Total customers by employment status.
+SELECT employment_status,
+count(*) as total_customers
+from customer_insurance
+group by employment_status
+order by total_customers desc;
+
+--Total customers by vehicle class
+SELECT vehicle_class,
+count(*) as total_customers
+from customer_insurance
+group by vehicle_class
+order by total_customers desc;
+
+--Total customers by vehicle size.
+SELECT vehicle_size,
+count(*) as total_customers
+from customer_insurance
+group by vehicle_size
+order by total_customers desc;
