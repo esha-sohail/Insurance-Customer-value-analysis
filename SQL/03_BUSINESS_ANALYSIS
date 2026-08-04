@@ -52,3 +52,43 @@ count(*) as total_customers
 from customer_insurance
 group by vehicle_size
 order by total_customers desc;
+
+
+--REVNUE ANALYSIS
+--Total monthly premium revenue.
+select sum(monthly_premium_auto) as total_revnue
+from customer_insurance;
+
+--Average monthly premium.
+select avg(monthly_premium_auto) as avg_revnue
+from customer_insurance;
+
+--Maximum monthly premium
+select max(monthly_premium_auto) as max_revnue
+from customer_insurance;
+
+--Minimum monthly premium.
+select min(monthly_premium_auto) as min_revnue
+from customer_insurance
+
+--Total Customer Lifetime Value.
+select sum(customer_lifetime_value) as total_clv
+from customer_insurance;
+
+--Average Customer Lifetime Value.
+select avg(customer_lifetime_value) as avg_clv
+from customer_insurance;
+
+--Average CLV by state.
+select state,
+avg(customer_lifetime_value) as avg_clv
+from customer_insurance
+group by state
+order by avg_clv desc;
+
+--Average CLV by policy type.
+select policy_type,
+avg(customer_lifetime_value) as avg_clv
+from customer_insurance
+group by policy_type
+order by avg_clv desc;
