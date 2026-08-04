@@ -1,0 +1,114 @@
+--02_Data_Cleaning.sql
+
+--Check for duplicate Customer IDs
+select customer,
+count(*) as duplicate_customer
+from customer_insurance
+group by customer
+having count(*) > 1;
+
+
+--Find columns containing NULL values
+SELECT *
+FROM customer_insurance
+WHERE customer IS NULL
+   OR state IS NULL
+   OR customer_lifetime_value IS NULL
+   OR response IS NULL
+   OR coverage IS NULL
+   OR education IS NULL
+   OR effective_to_date IS NULL
+   OR employment_status IS NULL
+   OR gender IS NULL
+   OR income IS NULL
+   OR location_code IS NULL
+   OR marital_status IS NULL
+   OR monthly_premium_auto IS NULL
+   OR months_since_last_claim IS NULL
+   OR months_since_policy_inception IS NULL
+   OR number_of_open_complaints IS NULL
+   OR number_of_policies IS NULL
+   OR policy_type IS NULL
+   OR policy IS NULL
+   OR renew_offer_type IS NULL
+   OR sales_channel IS NULL
+   OR total_claim_amount IS NULL
+   OR vehicle_class IS NULL
+   OR vehicle_size IS NULL;
+
+   --Count NULL values in each column
+  SELECT
+COUNT(*) FILTER (WHERE 'customer' IS NULL) AS customer_nulls,
+COUNT(*) FILTER (WHERE 'state' IS NULL) AS state_nulls,
+COUNT(*) FILTER (WHERE 'customer_lifetime_value' IS NULL) AS clv_nulls,
+COUNT(*) FILTER (WHERE 'income 'IS NULL) AS income_nulls,
+COUNT(*) FILTER (WHERE  'monthly_premium_auto' IS NULL) AS premium_nulls,
+COUNT(*) FILTER (WHERE 'total_claim_amount' IS NULL) AS claim_nulls;
+
+
+--Replace NULL values
+
+--Replace NULL income with 0
+
+UPDATE customer_insurance
+SET income = 0
+WHERE income IS NULL;
+
+--Replace NULL response
+
+UPDATE customer_insurance
+SET response = 'Unknown'
+WHERE response IS NULL;
+
+--Standardize text formatting
+
+--Uppercase
+
+UPDATE customer_insurance
+SET state = UPPER(state);
+
+--Lowercase
+
+UPDATE customer_insurance
+SET state = LOWER(state);
+
+--Title Case
+
+UPDATE customer_insurance
+SET state = INITCAP(state);
+
+
+--Remove leading/trailing spaces
+update customer_insurance
+set customer=trim(customer),
+  state = trim(state),
+  education=trim(education);
+
+  select * from customer_insurance;
+
+--Extract Year, Month and Quarter
+
+select customer,effective_to_date,
+extract(year from effective_to_date) as year,
+extract(month from effective_to_date) as month,
+extract(quarter from effective_to_date) as quarter
+from customer_insurance;
+
+--Identify invalid income values
+select customer, income
+from customer_insurance
+where income <=0;
+
+--Find customers with unrealistic claim amounts
+--finding the range
+select max(total_claim_amount) as maxi,
+       min(total_claim_amount) as mini
+	   from customer_insurance;
+--now
+select *
+from customer_insurance
+where total_claim_amount < 0
+or total_claim_amount > 3000;
+
+
+--NO DUPLICATE VALUES OR NULL VALUES,CLEAN dataset
