@@ -92,3 +92,37 @@ avg(customer_lifetime_value) as avg_clv
 from customer_insurance
 group by policy_type
 order by avg_clv desc;
+
+
+
+--Claims Analysis
+--Total claim amount.
+select sum(total_claim_amount) as total_claim
+from customer_insurance;
+
+--Average claim amount.
+select avg(total_claim_amount) as total_claim
+from customer_insurance;
+
+--Highest claim amount.
+select max(total_claim_amount) as total_claim
+from customer_insurance;
+
+--Lowest claim amount.
+select min(total_claim_amount) as total_claim
+from customer_insurance;
+
+--Average claim amount by coverage.
+select coverage,
+avg(total_claim_amount) as total_claim
+from customer_insurance
+group by coverage
+order by total_claim desc;
+
+
+--Average claim amount by vehicle class.
+select vehicle_class,
+avg(total_claim_amount) as total_claim
+from customer_insurance
+group by vehicle_class
+order by total_claim desc;
