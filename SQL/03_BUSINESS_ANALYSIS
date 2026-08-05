@@ -126,3 +126,46 @@ avg(total_claim_amount) as total_claim
 from customer_insurance
 group by vehicle_class
 order by total_claim desc;
+
+
+
+--Marketing Analysis
+--Response rate by sales channel.
+SELECT sales_channel,
+       COUNT(*) AS total_customers,
+       COUNT(*) FILTER (WHERE response = 'Yes') AS responded_customers,
+       ROUND(
+           COUNT(*) FILTER (WHERE response = 'Yes') * 100.0 / COUNT(*),
+           2
+       ) AS response_rate_percentage
+FROM customer_insurance
+GROUP BY sales_channel
+ORDER BY response_rate_percentage DESC;
+
+--Response rate by policy type.
+SELECT policy_type,
+       COUNT(*) AS total_customers,
+       COUNT(*) FILTER (WHERE response = 'Yes') AS responded_customers,
+       ROUND(
+           COUNT(*) FILTER (WHERE response = 'Yes') * 100.0 / COUNT(*),
+           2
+       ) AS response_rate_percentage
+FROM customer_insurance
+GROUP BY policy_type
+ORDER BY response_rate_percentage DESC;
+
+
+--Average CLV of customers who accepted the offer.
+SELECT ROUND(AVG(customer_lifetime_value), 2) AS avg_clv_accepted_offer
+FROM customer_insurance
+WHERE response = 'Yes';
+
+--Compare income between responders and non-responders.
+SELECT response,
+       COUNT(*) AS total_customers,
+       MIN(income) AS min_income,
+       MAX(income) AS max_income,
+       ROUND(AVG(income), 2) AS avg_income
+FROM customer_insurance
+GROUP BY response
+ORDER BY avg_income DESC;
