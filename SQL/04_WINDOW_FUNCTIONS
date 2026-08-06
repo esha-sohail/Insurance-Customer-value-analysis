@@ -1,0 +1,51 @@
+--ROW_NUMBER()
+--Assign row numbers to customers by CLV.
+
+SELECT customer,
+       customer_lifetime_value,
+       ROW_NUMBER() OVER (
+           ORDER BY customer_lifetime_value DESC
+       ) AS row_num
+FROM customer_insurance;
+
+--Assign row numbers within each state.
+select customer,state,customer_lifetime_value,
+ row_number() over(partition by state 
+ order by customer_lifetime_value desc) as row_num
+ from customer_insurance
+ order by state,row_num;
+
+
+ --Find the top 5 customers in every state.
+ WITH ranked_customers AS (
+    SELECT customer,
+           state,
+           customer_lifetime_value,
+           ROW_NUMBER() OVER (
+               PARTITION BY state
+               ORDER BY customer_lifetime_value DESC
+           ) AS row_num
+    FROM customer_insurance
+)
+
+SELECT customer,
+       state,
+       customer_lifetime_value,
+       row_num
+FROM ranked_customers
+WHERE row_num <= 5
+ORDER BY state, row_num;
+
+
+--Find the highest-income customer in every state.
+with ranked_customer as
+( select state,customer,income,
+      row_number()over(partition by state 
+	  order by income desc) as row_num
+	  from customer_insurance 
+	  )
+	select customer,
+	state,row_num
+	from ranked_customer
+	where row_num =1
+	order by state,row_num;
