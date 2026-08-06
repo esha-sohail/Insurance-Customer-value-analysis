@@ -95,3 +95,39 @@ group by policy_type
   rank() over(order by total_premium_revnue desc) as policy_type_rank
   from policy_rank
   order by policy_type_rank;
+
+
+--DENSE_RANK()
+--Dense rank customers based on claim amount.
+select 
+customer,total_claim_amount,
+dense_rank() over(order by total_claim_amount desc)
+as claim_rank
+from customer_insurance;
+
+--Dense rank vehicle classes by average premium.
+with vehicle_rank as
+(
+select vehicle_class,
+avg(monthly_premium_auto)
+as avg_premium
+from customer_insurance
+group by vehicle_class
+  )
+  select vehicle_class, avg_premium,
+  dense_rank() over(order by avg_premium desc ) as ranking
+  from vehicle_rank
+  order by ranking;
+
+
+ --Dense rank states by average income.
+ with state_rank as(
+select state,
+round(avg(income),2) as avg_income
+from customer_insurance
+group by state
+ )
+ select state,avg_income,
+ dense_rank()over(order by avg_income desc) as state_avg
+ from state_rank
+ order by state_avg;
