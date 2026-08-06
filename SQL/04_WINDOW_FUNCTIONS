@@ -49,3 +49,49 @@ with ranked_customer as
 	from ranked_customer
 	where row_num =1
 	order by state,row_num;
+
+
+
+
+--rank()
+--Rank customers by Customer Lifetime Value.
+select customer,
+customer_lifetime_value,
+rank() 
+over(order by customer_lifetime_value desc) as rank_num
+from customer_insurance;
+
+--Rank customers by income.
+select customer,
+income,
+rank() 
+over(order by income desc) as rank_num
+from customer_insurance;
+
+--Rank states by average CLV.
+
+with state_clv as (
+select state,
+avg(customer_lifetime_value) as avg_clv
+from customer_insurance
+group by state
+        )
+  select state,
+  avg_clv,
+  rank() over(order by avg_clv desc) as state_rank
+  from state_clv
+  order by state_rank;
+
+
+--Rank policy types by premium revenue
+with policy_rank as (
+select policy_type,
+sum(monthly_premium_auto) as total_premium_revnue
+from customer_insurance
+group by policy_type
+        )
+  select policy_type,
+ total_premium_revnue,
+  rank() over(order by total_premium_revnue desc) as policy_type_rank
+  from policy_rank
+  order by policy_type_rank;
