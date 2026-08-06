@@ -131,3 +131,22 @@ group by state
  dense_rank()over(order by avg_income desc) as state_avg
  from state_rank
  order by state_avg;
+
+  --NTILE
+ --Divide customers into four CLV quartiles.
+ select customer,customer_lifetime_value,
+ ntile(4) over(order by customer_lifetime_value desc) as clv_quartile
+ from customer_insurance
+ order by customer_lifetime_value desc;
+
+ --Divide customers into five income groups.
+  select customer,income,
+ ntile(5) over(order by income desc) as income_group
+ from customer_insurance
+ order by income desc;
+
+ --Divide customers into ten premium deciles.
+ select customer,monthly_premium_auto,
+ ntile(10) over(order by monthly_premium_auto desc) as premium_decile
+ from customer_insurance
+ order by monthly_premium_auto desc;
