@@ -183,3 +183,34 @@ SELECT customer,
        ) AS claim_difference
 FROM customer_insurance
 ORDER BY total_claim_amount DESC;
+
+
+
+--LEAD()
+--Compare each customer with the next customer.
+
+select customer,customer_lifetime_value,
+lead(customer_lifetime_value)over(order by customer_lifetime_value desc) as
+next_clv
+from customer_insurance
+order by customer_lifetime_value desc;
+
+--Calculate premium difference with the next record.
+
+select customer,monthly_premium_auto,
+lead(monthly_premium_auto)over(order by monthly_premium_auto desc) as next_record,
+monthly_premium_auto - lead(monthly_premium_auto)over(order by monthly_premium_auto desc) as difference
+from customer_insurance
+
+--Find premium growth between adjacent customers.
+
+SELECT customer,
+       monthly_premium_auto,
+       LEAD(monthly_premium_auto) OVER (
+           ORDER BY monthly_premium_auto DESC
+       ) AS next_premium,
+       LEAD(monthly_premium_auto) OVER (
+           ORDER BY monthly_premium_auto DESC
+       ) - monthly_premium_auto AS premium_growth
+FROM customer_insurance
+ORDER BY monthly_premium_auto DESC;
