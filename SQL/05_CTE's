@@ -1,0 +1,142 @@
+
+--CTE'S
+--Find the top 10 customers by CLV using a CTE.
+with clv_rank as
+( select customer,customer_lifetime_value
+      from customer_insurance
+	  order by customer_lifetime_value desc
+	  limit 10)
+	  select *
+	  from clv_rank;
+
+--Find customers earning above the average income.
+with earning_customer as(
+select 
+round(avg(income),2) as avg_customer
+from customer_insurance  
+   )
+   select customer,income
+   from customer_insurance,earning_customer
+  where customer_insurance.income > earning_customer.avg_customer
+  order by income desc;
+
+  --Find states with above-average CLV.
+
+  
+ WITH state_clv AS (
+    SELECT state,
+           AVG(customer_lifetime_value) AS avg_clv
+    FROM customer_insurance
+    GROUP BY state
+)
+
+SELECT state,
+       ROUND(avg_clv, 2) AS avg_clv
+FROM state_clv
+WHERE avg_clv > (
+    SELECT AVG(customer_lifetime_value)
+    FROM customer_insurance
+)
+ORDER BY avg_clv DESC;
+
+
+
+--Calculate Average Premium by Policy Type
+
+with premium_cte as(
+select policy_type,
+avg(monthly_premium_auto) as avg_premium
+from customer_insurance
+group by policy_type
+)
+   select *
+   from premium_cte
+   order by avg_premium desc;
+
+
+   --Find Customers Whose Claim Amount Exceeds Their State Average
+
+ WITH state_claim AS (
+    SELECT state,
+           AVG(total_claim_amount) AS avg_claim
+    FROM customer_insurance
+    GROUP BY state
+)
+
+SELECT c.customer,
+       c.state,
+       c.total_claim_amount,
+       s.avg_claim
+FROM customer_insurance c
+JOIN state_claim s
+ON c.state = s.state
+WHERE c.total_claim_amount > s.avg_claim;
+
+--Rank Customers Within Each Policy Type
+
+with rank_customer as(
+select customer,policy_type, customer_lifetime_value,
+row_number() over(partition by policy_type order by
+customer_lifetime_value) as rank_no
+from customer_insurance )
+
+select *
+from rank_customer
+order by policy_type,rank_no;
+
+--Find Top 3 Customers per Sales Channel
+
+WITH ranked_customers AS (
+    SELECT customer,
+           sales_channel,
+           customer_lifetime_value,
+           ROW_NUMBER() OVER(
+               PARTITION BY sales_channel
+               ORDER BY customer_lifetime_value DESC
+           ) AS rank_no
+    FROM customer_insurance
+)
+
+SELECT *
+FROM ranked_customers
+WHERE rank_no <= 3
+ORDER BY sales_channel, rank_no;
+
+
+--Find Top 5 Highest Claim Customers in Each State
+WITH ranked_claims AS (
+    SELECT customer,
+           state,
+           total_claim_amount,
+           ROW_NUMBER() OVER(
+               PARTITION BY state
+               ORDER BY total_claim_amount DESC
+           ) AS rank_no
+    FROM customer_insurance
+)
+
+SELECT *
+FROM ranked_claims
+WHERE rank_no <= 5
+ORDER BY state, rank_no;
+
+
+--Calculate Premium Contribution Percentage by State
+
+WITH state_premium AS (
+    SELECT state,
+           SUM(monthly_premium_auto) AS total_premium
+    FROM customer_insurance
+    GROUP BY state
+),
+overall_premium AS (
+    SELECT SUM(monthly_premium_auto) AS grand_total
+    FROM customer_insurance
+)
+
+SELECT state,
+       total_premium,
+       ROUND((total_premium * 100.0 / grand_total),2) AS contribution_percentage
+FROM state_premium
+CROSS JOIN overall_premium
+ORDER BY contribution_percentage DESC;
