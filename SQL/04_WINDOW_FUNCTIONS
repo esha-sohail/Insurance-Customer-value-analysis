@@ -150,3 +150,36 @@ group by state
  ntile(10) over(order by monthly_premium_auto desc) as premium_decile
  from customer_insurance
  order by monthly_premium_auto desc;
+
+ 
+--lag()
+--Compare each customer's CLV with the previous customer
+SELECT customer,
+       customer_lifetime_value,
+       LAG(customer_lifetime_value) OVER (
+           ORDER BY customer_lifetime_value DESC
+       ) AS previous_clv
+FROM customer_insurance
+
+--Compare premium with the previous premium
+
+select customer,
+monthly_premium_auto,
+lag(monthly_premium_auto)
+over(order by monthly_premium_auto) 
+as previous_premium
+from customer_insurance;
+ORDER BY customer_lifetime_value DESC;
+
+--Calculate difference between consecutive claim amounts.
+SELECT customer,
+       total_claim_amount,
+       LAG(total_claim_amount) OVER (
+           ORDER BY total_claim_amount DESC
+       ) AS previous_claim_amount,
+       total_claim_amount -
+       LAG(total_claim_amount) OVER (
+           ORDER BY total_claim_amount DESC
+       ) AS claim_difference
+FROM customer_insurance
+ORDER BY total_claim_amount DESC;
