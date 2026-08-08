@@ -1,0 +1,44 @@
+--CASE STATEMENTS
+
+
+--Categorize customers into High, Medium, and Low CLV.
+select customer,customer_lifetime_value,
+case
+when customer_lifetime_value < 10000 then 'low_clv' 
+when customer_lifetime_value  between 10000 and 40000 then 'medium clv'
+else 'high_clv'
+end as clv_division
+from customer_insurance;
+
+--Categorize customers into High, Medium, and Low Income.
+select customer,income,
+case
+when income < 10000 then 'low_income' 
+when income  between 10000 and 40000 then 'medium_ income'
+else 'high_ income'
+end as income_division
+from customer_insurance
+order by income desc;
+
+--Categorize customers into High, Medium, and Low Claim Risk.
+
+select customer,total_claim_amount,
+case
+when total_claim_amount < 100 then 'low_claim' 
+when total_claim_amount  between 100 and 1500 then 'medium_ claim'
+else 'high_ claim'
+end as claim_division
+from customer_insurance
+order by total_claim_amount desc;
+
+--Categorize premium into Bronze, Silver, Gold, and Platinum.
+select max(monthly_premium_auto), min(monthly_premium_auto) from customer_insurance;
+
+select customer,monthly_premium_auto,
+case
+when monthly_premium_auto < 50 then 'bronze' 
+when monthly_premium_auto  between 50 and 150 then 'silver'
+when monthly_premium_auto  between 151 and 200 then 'gold'
+else 'platinum'
+end as premium_division
+from customer_insurance;
