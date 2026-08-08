@@ -140,3 +140,17 @@ SELECT state,
 FROM state_premium
 CROSS JOIN overall_premium
 ORDER BY contribution_percentage DESC;
+
+--Find Customers Contributing to the Top 20% of Total CLV
+WITH ranked_clv AS (
+    SELECT customer,
+           customer_lifetime_value,
+           NTILE(5) OVER(
+               ORDER BY customer_lifetime_value DESC
+           ) AS quintile
+    FROM customer_insurance
+)
+
+SELECT *
+FROM ranked_clv
+WHERE quintile = 1;
