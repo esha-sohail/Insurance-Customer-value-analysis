@@ -42,3 +42,103 @@ when monthly_premium_auto  between 151 and 200 then 'gold'
 else 'platinum'
 end as premium_division
 from customer_insurance;
+
+--Customer Segments
+--Find High CLV & Low Claims customers.
+select customer,
+customer_lifetime_value,
+total_claim_amount
+from customer_insurance
+where customer_lifetime_value > 40000
+and total_claim_amount < 500;
+
+--Find High Income & Low Premium customers.
+select customer,
+income,
+monthly_premium_auto
+from customer_insurance
+where income > 40000
+and monthly_premium_auto < 100;
+
+
+--Find High Claims & Low Income customers.
+select customer,
+income,
+total_claim_amount
+from customer_insurance
+where income < 10000
+and total_claim_amount >  1500;
+
+
+--Find Premium customers with low CLV.
+select customer,
+monthly_premium_auto,
+customer_lifetime_value
+from customer_insurance
+where customer_lifetime_value < 10000
+and monthly_premium_auto >  200;
+
+
+
+--Find customers eligible for premium upgrades.
+SELECT customer,
+       customer_lifetime_value,
+       monthly_premium_auto
+FROM customer_insurance
+WHERE customer_lifetime_value > 40000
+  AND monthly_premium_auto < 150
+ORDER BY customer_lifetime_value DESC;
+
+
+
+--Find loyal customers based on CLV
+SELECT customer,
+       customer_lifetime_value
+FROM customer_insurance
+WHERE customer_lifetime_value > 40000
+ORDER BY customer_lifetime_value DESC;
+
+
+--Find customers requiring retention campaign 
+SELECT customer,
+       customer_lifetime_value,
+       months_since_last_claim
+FROM customer_insurance
+WHERE customer_lifetime_value > 40000
+  AND months_since_last_claim >= 12
+ORDER BY customer_lifetime_value DESC;
+
+--Find customers suitable for upselling
+--Target high-value customers with relatively low premiums:
+
+SELECT customer,
+       customer_lifetime_value,
+       monthly_premium_auto
+       
+FROM customer_insurance
+WHERE customer_lifetime_value > 40000
+  AND monthly_premium_auto < 120
+  ORDER BY customer_lifetime_value DESC;
+
+
+  --Find customers suitable for cross-selling
+--A simple business rule is customers with high CLV who have relatively few policies:
+
+SELECT customer,
+       customer_lifetime_value,
+       number_of_policies,
+       policy_type
+FROM customer_insurance
+WHERE customer_lifetime_value > 40000
+  AND number_of_policies <= 2
+ORDER BY customer_lifetime_value DESC;
+
+--Find inactive customers based on response
+--Here, response = 'No' means they did not respond to the marketing offer:
+SELECT customer,
+       response,
+       customer_lifetime_value,
+       monthly_premium_auto
+FROM customer_insurance
+WHERE response = 'No'
+ORDER BY customer_lifetime_value DESC;
