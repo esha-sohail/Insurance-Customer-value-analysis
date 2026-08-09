@@ -142,3 +142,78 @@ SELECT customer,
 FROM customer_insurance
 WHERE response = 'No'
 ORDER BY customer_lifetime_value DESC;
+
+
+-- QUARTILES
+--Count customers in each CLV quartile
+WITH clv_quartiles AS (
+    SELECT customer,
+           customer_lifetime_value,
+           NTILE(4) OVER (
+               ORDER BY customer_lifetime_value DESC
+           ) AS clv_quartile
+    FROM customer_insurance
+)
+
+SELECT clv_quartile,
+       COUNT(*) AS total_customers
+FROM clv_quartiles
+GROUP BY clv_quartile
+ORDER BY clv_quartile;
+
+--Calculate average premium within each quartile
+WITH clv_quartiles AS (
+    SELECT customer,
+           customer_lifetime_value,
+           monthly_premium_auto,
+           NTILE(4) OVER (
+               ORDER BY customer_lifetime_value DESC
+           ) AS clv_quartile
+    FROM customer_insurance
+)
+
+SELECT clv_quartile,
+       ROUND(AVG(monthly_premium_auto), 2) AS avg_premium
+FROM clv_quartiles
+GROUP BY clv_quartile
+ORDER BY clv_quartile;
+
+--Compare income across quartiles
+WITH clv_quartiles AS (
+    SELECT customer,
+           customer_lifetime_value,
+           income,
+           NTILE(4) OVER (
+               ORDER BY customer_lifetime_value DESC
+           ) AS clv_quartile
+    FROM customer_insurance
+)
+
+SELECT clv_quartile,
+       ROUND(AVG(income), 2) AS avg_income,
+       MIN(income) AS min_income,
+       MAX(income) AS max_income
+FROM clv_quartiles
+GROUP BY clv_quartile
+ORDER BY clv_quartile;
+
+
+--identify most profitable quartile
+WITH clv_quartiles AS (
+    SELECT *,
+           NTILE(4) OVER (
+               ORDER BY customer_lifetime_value DESC
+           ) AS clv_quartile
+    FROM customer_insurance
+)
+
+SELECT clv_quartile,
+       COUNT(*) AS customers,
+       ROUND(AVG(customer_lifetime_value), 2) AS avg_clv,
+       ROUND(AVG(monthly_premium_auto), 2) AS avg_premium,
+       ROUND(AVG(total_claim_amount), 2) AS avg_claim,
+       ROUND(AVG(income), 2) AS avg_income,
+       ROUND(AVG(customer_lifetime_value - total_claim_amount), 2) AS avg_profit
+FROM clv_quartiles
+GROUP BY clv_quartile
+ORDER BY clv_quartile;
