@@ -1,0 +1,190 @@
+
+--07_Advanced_Insights
+--Which state generates the highest insurance revenue?
+select state,
+sum(monthly_premium_auto) as total_revnue
+from customer_insurance
+group by state
+order by total_revnue desc
+limit 1;
+
+--Which state has the highest average CLV?
+select state,
+round(avg(customer_lifetime_value),2) as avg_clv
+from customer_insurance
+group by state
+order by avg_clv desc
+limit 1;
+
+--Which policy type generates the most revenue?
+select policy_type,
+sum(monthly_premium_auto) as total_revnue
+from customer_insurance
+group by policy_type
+order by total_revnue desc
+limit 1;
+
+--. Which policy type has the highest average claim amount?
+select policy_type,
+round(avg(total_claim_amount),2) as avg_claim
+from customer_insurance
+group by policy_type
+order by avg_claim desc
+limit 1;
+
+--Which sales channel attracts the highest-value customers?
+select sales_channel,
+round(avg(customer_lifetime_value),2) as avg_clv
+from customer_insurance
+group by sales_channel
+order by avg_clv desc
+limit 1;
+
+--Which education level has the highest average income?
+select education,
+round(avg(income),2) as avg_income
+from customer_insurance
+group by education
+order by avg_income desc
+limit 1;
+
+--Which employment status produces the highest CLV?
+select employment_status,
+round(avg(customer_lifetime_value),2) as avg_clv
+from customer_insurance
+group by employment_status
+order by avg_clv desc
+limit 1;
+
+--Which marital status has the highest premium revenue?
+select marital_status,
+round(avg(monthly_premium_auto),2) as premium_revenue
+from customer_insurance
+group by marital_status
+order by premium_revenue desc
+limit 1;
+
+--Which vehicle class files the largest claims?
+select vehicle_class,
+round(avg(total_claim_amount),2) as avg_claim
+from customer_insurance
+group by vehicle_class
+order by avg_claim desc
+limit 1;
+
+--Which vehicle size has the highest premium?
+select vehicle_size,
+round(avg(monthly_premium_auto),2) as premium_revenue
+from customer_insurance
+group by vehicle_size
+order by premium_revenue desc
+limit 1;
+
+
+--Which coverage level is most profitable?
+select coverage,
+round(avg(customer_lifetime_value - total_claim_amount),2)
+as total_profit
+from customer_insurance
+group by coverage
+order by total_profit desc
+limit 1;
+
+
+--Which customers are underinsured?
+
+--High CLV + Low Premium:
+
+SELECT customer,
+       customer_lifetime_value,
+       monthly_premium_auto
+FROM customer_insurance
+WHERE customer_lifetime_value > 40000
+  AND monthly_premium_auto < 120
+ORDER BY customer_lifetime_value DESC;
+
+--Which customers are overinsured?
+--Low CLV + High Premium:
+
+SELECT customer,
+       customer_lifetime_value,
+       monthly_premium_auto
+FROM customer_insurance
+WHERE customer_lifetime_value < 10000
+  AND monthly_premium_auto > 100
+ORDER BY monthly_premium_auto DESC;
+
+--Which customers are the most profitable after claims?
+SELECT customer,
+       customer_lifetime_value,
+       total_claim_amount,
+       customer_lifetime_value - total_claim_amount AS profit
+FROM customer_insurance
+ORDER BY profit DESC
+LIMIT 10;
+
+--Which states have the highest response rate?
+
+select state,
+count(*) as total_customers,
+count(*)filter(where response = 'Yes') as responders,
+   round( count(*)filter(where response = 'Yes')*100.0
+	/count(*),2) as response_rate
+	from  customer_insurance
+	group by state
+	order by response_rate desc;
+
+--Which demographic group produces the highest CLV?
+
+--You can compare multiple demographic dimensions. For example, gender + education + marital status:
+
+SELECT gender,
+       education,
+       marital_status,
+       ROUND(AVG(customer_lifetime_value), 2) AS avg_clv
+FROM customer_insurance
+GROUP BY gender,
+         education,
+         marital_status
+ORDER BY avg_clv DESC
+LIMIT 1;
+
+
+--Which customer segment should marketing target first?
+--A strong target is high CLV customers who haven't responded.
+SELECT customer,
+       customer_lifetime_value,
+       monthly_premium_auto,
+       response
+FROM customer_insurance
+WHERE customer_lifetime_value > 40000
+  AND response = 'No'
+ORDER BY customer_lifetime_value DESC;
+
+
+--Identify the top 1% most valuable customers
+--Use NTILE(100):
+
+SELECT customer,
+       customer_lifetime_value
+FROM (
+    SELECT customer,
+           customer_lifetime_value,
+           NTILE(100) OVER (
+               ORDER BY customer_lifetime_value DESC
+           ) AS percentile
+    FROM customer_insurance
+) AS ranked_customers
+WHERE percentile = 1
+ORDER BY customer_lifetime_value DESC;
+
+--Build a customer profitability ranking
+SELECT customer,
+       customer_lifetime_value,
+       total_claim_amount,
+       customer_lifetime_value - total_claim_amount AS profit,
+       RANK() OVER (
+           ORDER BY customer_lifetime_value - total_claim_amount DESC
+       ) AS profitability_rank
+FROM customer_insurance
+ORDER BY profitability_rank;
