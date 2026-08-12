@@ -1,0 +1,46 @@
+
+--08_PowerBI_KPIs.sql
+--total customers
+select count(*)
+from customer_insurance;
+
+--Total Customer Lifetime Value
+select sum(customer_lifetime_value) as
+total_clv
+from customer_insurance;
+
+--total_premium_revnue
+select sum(monthly_premium_auto) as
+total_revnue
+from customer_insurance;
+
+--total claim
+select sum(total_claim_amount) as
+total_claim
+from customer_insurance;
+
+--Average Customer Lifetime Value
+select avg(customer_lifetime_value) as
+avg_clv
+from customer_insurance;
+
+--avg revnue
+select avg(monthly_premium_auto) as
+avg_revnue
+from customer_insurance;
+
+--avg claim
+select avg(total_claim_amount) as
+avg_claim
+from customer_insurance;
+
+--Response Rate (%)
+select count(*) as total_customer,
+count(*) filter(where response = 'Yes') as responders,
+round(count(*) filter(where response = 'Yes') * 100.0 /count(*) ,2)as response_rate
+from customer_insurance;
+
+--Average Income
+select round(avg(income),2)
+as avg_income
+from customer_insurance;
