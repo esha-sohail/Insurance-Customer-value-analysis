@@ -44,3 +44,77 @@ from customer_insurance;
 select round(avg(income),2)
 as avg_income
 from customer_insurance;
+
+
+--Dashboard Visuals
+--Customers by State
+SELECT state,
+       COUNT(*) AS total_customers
+FROM customer_insurance
+GROUP BY state
+ORDER BY total_customers DESC;
+
+--customer by policy type
+SELECT policy_type,
+       COUNT(*) AS total_customers
+FROM customer_insurance
+GROUP BY policy_type
+ORDER BY total_customers DESC;
+
+--Customers by Coverage
+SELECT coverage,
+       COUNT(*) AS total_customers
+FROM customer_insurance
+GROUP BY coverage
+ORDER BY total_customers DESC;
+
+--Premium Revenue by State
+SELECT state,
+       SUM(monthly_premium_auto) AS premium_revenue
+FROM customer_insurance
+GROUP BY state
+ORDER BY premium_revenue DESC;
+
+--Claim Amount by State
+SELECT state,
+       SUM(total_claim_amount) AS total_claim
+FROM customer_insurance
+GROUP BY state
+ORDER BY total_claim DESC;
+
+--CLV by Sales Channel
+SELECT sales_channel,
+       ROUND(AVG(customer_lifetime_value), 2) AS avg_clv
+FROM customer_insurance
+GROUP BY sales_channel
+ORDER BY avg_clv DESC;
+
+--CLV by Vehicle Class
+SELECT vehicle_class,
+       ROUND(AVG(customer_lifetime_value), 2) AS avg_clv
+FROM customer_insurance
+GROUP BY vehicle_class
+ORDER BY avg_clv DESC;
+
+--Premium by Education Level
+SELECT education,
+       SUM(monthly_premium_auto) AS total_premium
+FROM customer_insurance
+GROUP BY education
+ORDER BY total_premium DESC;
+
+--income Distribution by Employment Status
+--For Power BI, I'd use average income:
+
+SELECT employment_status,
+       ROUND(AVG(income), 2) AS avg_income
+FROM customer_insurance
+GROUP BY employment_status
+ORDER BY avg_income DESC;
+
+--top 10 Customers by CLV
+select customer,
+customer_lifetime_value
+from customer_insurance
+order by customer_lifetime_value desc
+limit 10;
