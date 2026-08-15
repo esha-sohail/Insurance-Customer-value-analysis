@@ -41,8 +41,8 @@ Raw CSV is not included in this repo. Download it directly from the Kaggle link 
 │   ├── 07_Advanced_Insights.sql
 │   └── 08_PowerBI_KPIs.sql
 ├── dashboard/
-│   ├── insurance_dashboard.pbix
-│   └── screenshots/
+│   ├── insurance_dashboard.pdf
+│   └── interactive demo gif 
 ├── insights/
 │   └── clv_insight_pdf_report
 └── README.md
@@ -65,11 +65,11 @@ Raw CSV is not included in this repo. Download it directly from the Kaggle link 
 
 An interactive Power BI dashboard translates the SQL analysis into a stakeholder-facing view — including CLV and response rate KPIs, segment breakdowns, and channel/offer performance.
 
-📷 *Screenshots available in* `dashboard/screenshots/`
+📷 *Screenshots available in* `dashboard/pdf/`
 
 ## 💡 Insights
 
-Detailed findings and business recommendations are documented separately in [`insights/key_findings.md`](insights/key_findings.md).
+Detailed findings and business recommendations are documented separately in [insights/clv_report).
 
 ## ▶️ How to Reproduce
 
