@@ -44,7 +44,7 @@ Raw CSV is not included in this repo. Download it directly from the Kaggle link 
 │   ├── insurance_dashboard.pbix
 │   └── screenshots/
 ├── insights/
-│   └── key_findings.md
+│   └── clv_insight_pdf_report
 └── README.md
 ```
 
