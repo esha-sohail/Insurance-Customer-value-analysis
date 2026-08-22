@@ -65,11 +65,28 @@ Raw CSV is not included in this repo. Download it directly from the Kaggle link 
 
 An interactive Power BI dashboard translates the SQL analysis into a stakeholder-facing view — including CLV and response rate KPIs, segment breakdowns, and channel/offer performance.
 
-📷 *Screenshots available in* `dashboard/pdf/`
+📷 *Screenshots available in* `BI DASHBOARD/pdf/`
 
 ## 💡 Insights
 
-Detailed findings and business recommendations are documented separately in [insights/clv_report).
+
+- **💰 $73.1M** total Customer Lifetime Value across 9,134 policyholders, against **$851K** in monthly premium revenue and **$3.96M** in total claims.
+
+- **⚠️ 22% of customers are overinsured** — 2,003 customers pay above-average premiums ($100+/mo) while carrying below-average CLV (under $10,000). This is the single largest structural risk in the portfolio.
+
+- **🚗 Vehicle class is the strongest CLV predictor** — Luxury SUV and Luxury Car owners carry ~2.5x the average CLV of standard sedan owners ($17,123 vs. $6,632), but also file ~3.2x larger claims ($1,130 vs. $352).
+
+- **📞 The Agent sales channel converts at nearly 2x every other channel** — 19.15% response rate vs. 10.9–11.8% for Web, Branch, and Call Center combined.
+
+- **🏆 Special Auto is the smallest policy segment (4.1%) but the highest-value one** — average CLV of $8,594, ahead of Personal Auto ($8,027) and Corporate Auto.
+
+- **💎 Premium coverage remains the most profitable tier** despite filing the largest claims per customer — average profit of $10,244/customer vs. $6,812 for Basic coverage, meaning pricing already outpaces risk.
+
+- **🌎 Geography and income are weak CLV predictors** — CLV varies by only 2.7% across states and 5.7% across income quartiles, meaning policy structure and vehicle choice matter far more than *who* the customer is or *where* they live.
+
+- **🎯 54 high-CLV customers (>$40,000) have not responded** to the current marketing campaign — a small, high-value, immediately actionable target list for a follow-up campaign.
+
+- **📊 Overall campaign response rate is a modest 14.32%**, and responders are not meaningfully higher-value than non-responders — the current campaign isn't yet preferentially reaching high-CLV customers.
 
 ## ▶️ How to Reproduce
 
